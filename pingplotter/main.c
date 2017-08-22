@@ -72,10 +72,6 @@ static void ping(const char *host)
     perror("ping: creating a raw socket");
     exit(1);
   }
-
-  //fprintf(stderr, "Created Socket\n"); 
-  /* drop root privs if running setuid */
-  //setuid(getuid());
    
   memset(&pingaddr, 0, sizeof(struct sockaddr_in));
   pingaddr.sin_family = AF_INET;
@@ -95,7 +91,6 @@ static void ping(const char *host)
   pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
    
   c = sendto(pingsock, packet, sizeof(packet), 0, (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in));
-  //fprintf(stderr,"Sending\n"); 
 
   if (c < 0 || c != sizeof(packet)) 
   {
@@ -105,12 +100,10 @@ static void ping(const char *host)
     sleep(1);
     close(pingsock);
     startp(host);
-    //exit(1);
   }
   clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
   /* listen for replies */
-  //fprintf(stderr,"Receiving\n"); 
   while (1) {
     struct sockaddr_in from;
     size_t fromlen = sizeof(from);
@@ -136,7 +129,7 @@ static void ping(const char *host)
       perror("ping: recvfrom");
       break;
     }
-    //fprintf(stderr,"Analyzing\n"); 
+
     if (c >= 76) {                   /* ip + icmp */
       struct iphdr *iphdr = (struct iphdr *) packet;
        
