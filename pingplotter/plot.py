@@ -1,8 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 i=0
-with open('/home/dominik/Documents/pingplotter/time.txt') as fp:
+fileDir = os.path.dirname(os.path.realpath('__file__'))
+filename = os.path.join(fileDir,'time.txt')
+with open(filename) as fp:
     for line in fp:
         Y1 = float(line)/1000
         i=i+1

@@ -118,7 +118,7 @@ static void ping(const char *host)
           close(pingsock);
           clock_gettime(CLOCK_MONOTONIC_RAW, &end);
           ttime = 0;
-          fp=fopen("/home/dominik/Documents/pingplotter/time.txt","a");
+          fp=fopen("time.txt","a");
           fprintf(fp, "%d\n",ttime);
           fclose(fp);
           sleep(1);
@@ -144,7 +144,7 @@ static void ping(const char *host)
   printf("%s|%s is alive!  ", hostname,inet_ntoa(ip_addr));
   ttime >= 100000 ? printf("\x1b[31m" "%d µsec" "\x1b[0m" "\n", ttime) : printf("\x1b[32m" "%d µsec" "\x1b[0m" "\n", ttime);
   
-  fp=fopen("/home/dominik/Documents/pingplotter/time.txt","a");
+  fp=fopen("time.txt","a");
   fprintf(fp, "%d\n",ttime);
   fclose(fp);
   close(pingsock);
@@ -153,8 +153,8 @@ static void ping(const char *host)
 void INThandler()
 {
   printf("Print graphic!\n");
-  system("python /home/dominik/Documents/pingplotter/plot.py");
-  exit(1);
+  system("python plot.py");
+  exit(0);
 }
 
 int main (int argc, char* argv [])
