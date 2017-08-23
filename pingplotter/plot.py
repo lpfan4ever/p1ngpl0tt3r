@@ -10,9 +10,9 @@ with open(filename) as fp:
         Y1 = float(line)/1000
         i=i+1
         if Y1 >= 100:
-            plt.bar(i, +Y1, facecolor='#ff0000', edgecolor='white')
+            plt.bar(i, +Y1, facecolor='#ff0000', edgecolor='black')
         else:
-            plt.bar(i, +Y1, facecolor='#00ff00', edgecolor='white')
+            plt.bar(i, +Y1, facecolor='#00ff00', edgecolor='black')
 fp.close()
 plt.ylabel('Ping in ms')
 plt.xlabel('Time in sec')
