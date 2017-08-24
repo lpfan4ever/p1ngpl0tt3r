@@ -144,8 +144,12 @@ static void ping(const char *host)
   printf("%s|%s is alive!  ", hostname,inet_ntoa(ip_addr));
   ttime >= 100000 ? printf("\x1b[31m" "%d µsec" "\x1b[0m" "\n", ttime) : printf("\x1b[32m" "%d µsec" "\x1b[0m" "\n", ttime);
   
+  time_t now = time(NULL);
+  struct tm *cnow =  localtime(&now);
+  
   fp=fopen("time.txt","a");
-  fprintf(fp, "%d\n",ttime);
+  fprintf(fp, "%d ",ttime);
+  fprintf(fp, "%.2d:%.2d:%.2d\n", cnow->tm_hour, cnow->tm_min, cnow->tm_sec);
   fclose(fp);
   close(pingsock);
 }
@@ -160,6 +164,7 @@ void INThandler()
 int main (int argc, char* argv [])
 {
   signal(SIGINT, INThandler);
+  
   if(argc >= 2)
   {
     system("rm time.txt");
