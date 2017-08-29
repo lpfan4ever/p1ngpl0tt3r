@@ -118,8 +118,13 @@ static void ping(const char *host)
           close(pingsock);
           clock_gettime(CLOCK_MONOTONIC_RAW, &end);
           ttime = 0;
+          
+          time_t now = time(NULL);
+          struct tm *cnow =  localtime(&now);
+          
           fp=fopen("time.txt","a");
-          fprintf(fp, "%d\n",ttime);
+          fprintf(fp, "%d ",ttime);
+          fprintf(fp, "%.2d:%.2d:%.2d\n", cnow->tm_hour, cnow->tm_min, cnow->tm_sec);
           fclose(fp);
           sleep(1);
           startp(host);
