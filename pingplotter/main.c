@@ -118,14 +118,7 @@ static void ping(const char *host)
           close(pingsock);
           clock_gettime(CLOCK_MONOTONIC_RAW, &end);
           ttime = 0;
-          
-          time_t now = time(NULL);
-          struct tm *cnow =  localtime(&now);
-          
-          fp=fopen("time.txt","a");
-          fprintf(fp, "%d ",ttime);
-          fprintf(fp, "%.2d:%.2d:%.2d\n", cnow->tm_hour, cnow->tm_min, cnow->tm_sec);
-          fclose(fp);
+          file_write(ttime);
           sleep(1);
           startp(host);
         }
@@ -149,14 +142,18 @@ static void ping(const char *host)
   printf("%s|%s is alive!  ", hostname,inet_ntoa(ip_addr));
   ttime >= 100000 ? printf("\x1b[31m" "%d µsec" "\x1b[0m" "\n", ttime) : printf("\x1b[32m" "%d µsec" "\x1b[0m" "\n", ttime);
   
+  file_write(ttime);
+  close(pingsock);
+}
+
+void file_write(uint64_t ttime)
+{
   time_t now = time(NULL);
   struct tm *cnow =  localtime(&now);
-  
   fp=fopen("time.txt","a");
   fprintf(fp, "%d ",ttime);
   fprintf(fp, "%.2d:%.2d:%.2d\n", cnow->tm_hour, cnow->tm_min, cnow->tm_sec);
   fclose(fp);
-  close(pingsock);
 }
 
 void INThandler()
