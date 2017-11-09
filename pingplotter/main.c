@@ -65,7 +65,8 @@ static void ping(const char *host)
   char packet[DEFDATALEN + MAXIPLEN + MAXICMPLEN];
   struct timespec start, end;
   int count = 0;
-  uint64_t ttime;
+  double ttime;
+  int ttime_int;
   struct in_addr ip_addr;
    
   if ((pingsock = socket(AF_INET, SOCK_RAW|SOCK_NONBLOCK, 1)) < 0) {       /* 1 == ICMP */
@@ -103,6 +104,7 @@ static void ping(const char *host)
   }
   clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
+
   /* listen for replies */
   while (1) {
     struct sockaddr_in from;
@@ -137,16 +139,16 @@ static void ping(const char *host)
     }
   }
   clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-
-  ttime = (uint64_t)((end.tv_sec * 1000000000 + end.tv_nsec) - (start.tv_sec * 1000000000 + start.tv_nsec))/1000;
+ 
+  ttime = (end.tv_sec + (double)end.tv_nsec/1000000000) - (start.tv_sec + (double)start.tv_nsec/1000000000);
+  ttime_int = (int)(ttime * 1000000);
   printf("%s|%s is alive!  ", hostname,inet_ntoa(ip_addr));
-  ttime >= 100000 ? printf("\x1b[31m" "%d µsec" "\x1b[0m" "\n", ttime) : printf("\x1b[32m" "%d µsec" "\x1b[0m" "\n", ttime);
-  
-  file_write(ttime);
+  ttime >= 100000 ? printf("\x1b[31m" "%d µsec" "\x1b[0m" "\n", ttime_int) : printf("\x1b[32m" "%d µsec" "\x1b[0m" "\n", ttime_int);
+  file_write(ttime_int);
   close(pingsock);
 }
 
-void file_write(uint64_t ttime)
+void file_write(int ttime)
 {
   time_t now = time(NULL);
   struct tm *cnow =  localtime(&now);
